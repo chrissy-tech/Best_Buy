@@ -1,6 +1,3 @@
-from statistics import quantiles
-
-
 class Product:
     def __init__(self, name: str, price: float, quantity: int):
         """Initialize a product with name, price, and quantity."""
