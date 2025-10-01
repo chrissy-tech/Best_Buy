@@ -26,7 +26,7 @@ def make_an_order(inventory):
     list_all_products(inventory)
     available_products = inventory.get_all_products()
 
-    print("When you are done selecting products, type 'A'" " to finish the order.")
+    print("When you are done selecting products, type 'A' to finish the order.")
     order_list = []
 
     while True:
@@ -40,7 +40,7 @@ def make_an_order(inventory):
 
         # Validation: must be a digit
         if not prod_choice.isdigit():
-            print("Invalid input! Please enter a product number or " "'A' to finish.")
+            print("Please enter a product NUMBER(1-3) or 'A' to finish.")
             continue
 
         prod_index = int(prod_choice) - 1

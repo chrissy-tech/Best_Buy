@@ -10,6 +10,7 @@ class Store:
         self.products.append(product)
 
     def remove_product(self, product: Product):
+	"""remove product from inventory"""e product from inventory"""
         if product in self.products:
             self.products.remove(product)
 
