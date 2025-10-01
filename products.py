@@ -2,7 +2,7 @@ from statistics import quantiles
 
 
 class Product:
-    def __init__(self, name, price, quantity):
+    def __init__(self, name: str, price: float, quantity: int):
         """Initialize a product with name, price, and quantity."""
 
         if not isinstance(name, str) or not name:
@@ -46,7 +46,7 @@ class Product:
 
     def show(self):
         """Display the products."""
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        print(f"{self.name}, Price: {self.price}, " f"Quantity: {self.quantity}")
 
     def buy(self, amount):
         """Reduce stock by given quantity and return total price."""

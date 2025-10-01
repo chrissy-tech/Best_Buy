@@ -1,79 +1,122 @@
-class Product:
-    def __init__(self, name, price, quantity):
-        """Initialize a product with name, price, and quantity."""
+import products
+import store
+import sys
 
-        if not isinstance(name, str) or not name:
-            raise TypeError("Name can not be empty")
 
-        # Ensure price is a non-negative number.
-        if not isinstance(price, (int, float)) or price < 0:
-            raise TypeError("Price must be a number >0")
+def list_all_products(inventory):
+    """List all active products"""
+    print("------")
+    for index, product in enumerate(inventory.get_all_products(), start=1):
+        print(
+            f"{index}. {product.name}, Price: ${product.price},"
+            f" Qty: {product.quantity}"
+        )
+    print("------")
 
-        # Ensure quantity is a non-negative integer.
-        if not isinstance(quantity, int) or quantity < 0:
-            raise TypeError("Quantity must be a number >0")
 
-        self.name = name
-        self.price = float(price)
-        self.quantity = int(quantity)
-        self.active = self.quantity > 0
+def show_total_amount(inventory):
+    """Show the total amount of items in store"""
+    print("------")
+    print(f"Total of {inventory.get_total_quantity()} items in the store")
+    print("------")
 
-    def get_quantity(self):
-        """Return the quantity of the product."""
-        return int(self.quantity)
 
-    def set_quantity(self, quantity):
-        """Set the quantity of the product."""
-        if quantity < 0:
-            raise ValueError("Quantity cannot be negative.")
-        self.quantity = quantity
-        self.active = quantity > 0
+def make_an_order(inventory):
+    """Prompt user to create an order and process it."""
+    list_all_products(inventory)
+    available_products = inventory.get_all_products()
 
-    def is_active(self):
-        """Return True if the product is active."""
-        return self.active
+    print("When you are done selecting products, type 'A'" " to finish the order.")
+    order_list = []
 
-    def activate(self):
-        """Activate the product."""
-        self.active = True
+    while True:
+        prod_choice = input(
+            "Which product # do you want (e.g. 1) " "or 'A' to finish? "
+        ).strip()
 
-    def deactivate(self):
-        """Deactivate the product."""
-        self.active = False
+        # Exit condition if user types A/a
+        if prod_choice.lower() == "a":
+            break
 
-    def show(self):
-        """Display the products."""
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        # Validation: must be a digit
+        if not prod_choice.isdigit():
+            print("Invalid input! Please enter a product number or " "'A' to finish.")
+            continue
 
-    def buy(self, amount):
-        """Reduce stock by given quantity and return total price."""
-        if not self.active:
-            raise Exception("Product is not available.")
-        if amount <= 0:
-            raise ValueError("Purchase amount must be positive.")
-        if amount > self.quantity:
-            raise ValueError("Not enough quantity in stock.")
+        prod_index = int(prod_choice) - 1
 
-        total_price = amount * self.price
-        self.quantity -= amount
+        if not (0 <= prod_index < len(available_products)):
+            print("Invalid product number! Try again.")
+            continue
 
-        # deactivate when no product available anymore
-        if self.quantity == 0:
-            self.deactivate()
+        # Ask for quantity
+        try:
+            quantity = int(input("What amount do you want? "))
+        except ValueError:
+            print("Invalid quantity! Must be a number.")
+            continue
 
-        return total_price
+        if quantity <= 0:
+            print("Quantity must be at least 1.")
+            continue
+
+        # Add selected product to order list
+        order_list.append((available_products[prod_index], quantity))
+        print(
+            f"Added {quantity}" f"× {available_products[prod_index].name} to order.\n"
+        )
+
+    # Process the order once after all products are selected
+    if order_list:
+        total_payment = inventory.order(order_list)
+        print("********")
+        print(f"Order completed! Total payment: ${total_payment}")
+    else:
+        print("No products were selected. Order canceled.")
+
+
+def exit_program(_inventory=None):
+    print("Thank you for your purchase!\n")
+    sys.exit()
+
+
+def start(store_p):
+    """Run the store menu loop until the user quits."""
+    while True:
+        print()
+        print("   Store Menu")
+        print("   ----------")
+        print("1. List all products in store")
+        print("2. Show total amount in store")
+        print("3. Make an order")
+        print("4. Quit")
+
+        try:
+            user_input = int(input("Please choose a number: "))
+            if 1 <= user_input <= len(FUNCTIONS):
+                FUNCTIONS[user_input](store_p)
+            else:
+                print("Invalid choice! Please choose a valid option.")
+        except ValueError:
+            print("Invalid input! Please enter a number.")
+
+
+# Map menu choices to functions
+FUNCTIONS = {
+    1: list_all_products,
+    2: show_total_amount,
+    3: make_an_order,
+    4: exit_program,
+}
 
 
 if __name__ == "__main__":
-    bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
-    mac = Product("MacBook Air M2", price=1450, quantity=100)
+    """Setup initial stock of inventory"""
+    product_list = [
+        products.Product("MacBook Air M2", price=1450, quantity=100),
+        products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+        products.Product("Google Pixel 7", price=500, quantity=250),
+    ]
 
-    print(bose.buy(50))
-    print(mac.buy(100))
-    print(mac.is_active())
-
-    bose.show()
-    mac.show()
-
-    bose.set_quantity(1000)
-    bose.show()
+    best_buy = store.Store(product_list)
+    start(best_buy)
