@@ -26,12 +26,12 @@ def make_an_order(inventory):
     list_all_products(inventory)
     available_products = inventory.get_all_products()
 
-    print("When you are done selecting products, type 'A' to finish the order.")
+    print("When you are done selecting products, type 'A'" "to finish the order.")
     order_list = []
 
     while True:
         prod_choice = input(
-            "Which product # do you want (e.g. 1) " "or 'A' to finish? "
+            "Choose a product number (1-3) " "or 'A' to finish: "
         ).strip()
 
         # Exit condition if user types A/a
@@ -46,18 +46,31 @@ def make_an_order(inventory):
         prod_index = int(prod_choice) - 1
 
         if not (0 <= prod_index < len(available_products)):
-            print("Invalid product number! Try again.")
+            print("Invalid product number! Please try again.")
+            continue
+
+        selected_product = available_products[prod_index]
+
+        if not selected_product.is_active():
+            print(f"Sorry, {selected_product.name} is currently out of stock!")
             continue
 
         # Ask for quantity
         try:
-            quantity = int(input("What amount do you want? "))
+            quantity = int(input("How many items would you like to order? "))
         except ValueError:
             print("Invalid quantity! Must be a number.")
             continue
 
         if quantity <= 0:
-            print("Quantity must be at least 1.")
+            print("Amount must be at least 1.")
+            continue
+
+        if quantity > available_products[prod_index].quantity:
+            print(
+                f"Sorry, only {available_products[prod_index].quantity} "
+                f"in stock! Try again!"
+            )
             continue
 
         # Add selected product to order list
@@ -120,3 +133,4 @@ if __name__ == "__main__":
 
     best_buy = store.Store(product_list)
     start(best_buy)
+

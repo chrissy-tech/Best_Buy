@@ -1,6 +1,6 @@
 class Product:
     def __init__(self, name: str, price: float, quantity: int):
-        """Initialize a product with name, price, and quantity."""
+        """Initialize a product with name, price and quantity."""
 
         if not isinstance(name, str) or not name:
             raise TypeError("Name can not be empty")
@@ -63,17 +63,3 @@ class Product:
 
         return total_price
 
-
-if __name__ == "__main__":
-    bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
-    mac = Product("MacBook Air M2", price=1450, quantity=100)
-
-    print(bose.buy(50))
-    print(mac.buy(100))
-    print(mac.is_active())
-
-    bose.show()
-    mac.show()
-
-    bose.set_quantity(1000)
-    bose.show()
