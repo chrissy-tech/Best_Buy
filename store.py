@@ -10,7 +10,7 @@ class Store:
         self.products.append(product)
 
     def remove_product(self, product: Product):
-	 if product in self.products:
+        if product in self.products:
             self.products.remove(product)
 
     def get_total_quantity(self) -> int:
@@ -35,9 +35,9 @@ class Store:
 
                 if quantity <= product.quantity:
                     total += product.buy(quantity)
+
             except Exception as e:
                 print(f"⚠️ Error ordering {product.name}: {e}")
                 continue
 
-        return total
-
+            return total

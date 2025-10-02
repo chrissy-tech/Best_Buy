@@ -1,7 +1,6 @@
 class Product:
     def __init__(self, name: str, price: float, quantity: int):
         """Initialize a product with name, price and quantity."""
-
         if not isinstance(name, str) or not name:
             raise TypeError("Name can not be empty")
 
@@ -9,7 +8,7 @@ class Product:
         if not isinstance(price, (int, float)) or price < 0:
             raise TypeError("Price must be a number >0")
 
-        # Ensure quantity is a non-negative integer.
+        # Ensure quantity is a non-negative integer
         if not isinstance(quantity, int) or quantity < 0:
             raise TypeError("Quantity must be a number >0")
 
@@ -62,4 +61,3 @@ class Product:
             self.deactivate()
 
         return total_price
-
