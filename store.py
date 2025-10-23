@@ -41,3 +41,4 @@ class Store:
                 continue
 
         return total
+
